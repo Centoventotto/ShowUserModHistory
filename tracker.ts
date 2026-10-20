@@ -11,7 +11,7 @@ import { ChannelStore, GuildMemberStore, GuildRoleStore, MessageStore, UserStore
 
 import { queueAuditLookup } from "./audit";
 import { openHistoryModal } from "./components/HistoryModal";
-import { settings } from "./settings";
+import { isGuildBlacklisted, settings } from "./settings";
 import { addEntries, addEntry, findLatest, getEntries, logger, updateEntry } from "./store";
 import { CachedMessage, EntryType, FluxVoiceState, LogEntry, MemberAction, MemberSnapshot, NewEntry, RawMessage, RawUser } from "./types";
 import { channelLabel, entryIcon, entryTitle, fmtDate, memberKey, rawUserTag, RECENT_WINDOW, toMs } from "./utils";
@@ -98,7 +98,7 @@ export function handleTimeout(guildId: string, userId: string, until: number, pr
 
     if (until > now) {
         knownTimeouts.set(key, until);
-        if (previous === until || !settings.store.logTimeouts || isIgnoredUser(userId)) return;
+        if (previous === until || !settings.store.logTimeouts || isIgnoredUser(userId) || isGuildBlacklisted(guildId)) return;
         if (findLatest(e => isTimeoutFor(e, until))) return;
 
         const replaced = previous && previous > now ? findLatest(e => isTimeoutFor(e, previous)) : undefined;
@@ -130,7 +130,7 @@ export function handleTimeout(guildId: string, userId: string, until: number, pr
 
     const open = findLatest(e => isTimeoutFor(e, previous));
     if (open) updateEntry(open.id, { endedAt: now });
-    if (!settings.store.logTimeoutRemovals || isIgnoredUser(userId)) return;
+    if (!settings.store.logTimeoutRemovals || isIgnoredUser(userId) || isGuildBlacklisted(guildId)) return;
 
     const entry = addEntry({
         type: "timeoutRemoved",
@@ -199,7 +199,7 @@ function memberRemoved(guildId: string, user: RawUser, member?: MemberSnapshot) 
     const key = memberKey(guildId, user.id);
     knownTimeouts.delete(key);
     voiceStates.delete(key);
-    if (isIgnoredUser(user.id, user.bot)) return;
+    if (isIgnoredUser(user.id, user.bot) || isGuildBlacklisted(guildId)) return;
 
     const recent = findRecent(guildId, user.id, ["ban", "kick", "leave"]);
     if (recent) {
@@ -234,7 +234,7 @@ function banAdded(guildId: string, user: RawUser, member?: MemberSnapshot) {
     const key = memberKey(guildId, user.id);
     knownTimeouts.delete(key);
     voiceStates.delete(key);
-    if (!settings.store.logBans || isIgnoredUser(user.id, user.bot)) return;
+    if (!settings.store.logBans || isIgnoredUser(user.id, user.bot) || isGuildBlacklisted(guildId)) return;
 
     const source = "Ban event (GUILD_BAN_ADD)";
     const recent = findRecent(guildId, user.id, ["ban", "leave"]);
@@ -253,7 +253,7 @@ function banAdded(guildId: string, user: RawUser, member?: MemberSnapshot) {
 }
 
 function banRemoved(guildId: string, user: RawUser) {
-    if (!settings.store.logBans || isIgnoredUser(user.id, user.bot)) return;
+    if (!settings.store.logBans || isIgnoredUser(user.id, user.bot) || isGuildBlacklisted(guildId)) return;
 
     const entry = addEntry({
         type: "unban",
@@ -312,7 +312,7 @@ export function onVoiceStates(states: FluxVoiceState[]) {
         const previous = voiceStates.get(key);
         const next = { mute: !!state.mute, deaf: !!state.deaf };
         voiceStates.set(key, next);
-        if (!settings.store.logVoiceMutes || isIgnoredUser(userId)) continue;
+        if (!settings.store.logVoiceMutes || isIgnoredUser(userId) || isGuildBlacklisted(guildId)) continue;
 
         for (const kind of ["mute", "deaf"] as const) {
             const enabled = next[kind];
@@ -344,7 +344,7 @@ export function onVoiceStates(states: FluxVoiceState[]) {
 // #region Messages
 
 function wantsChannel(guildId?: string) {
-    return !!guildId || settings.store.logDirectMessages;
+    return guildId ? !isGuildBlacklisted(guildId) : settings.store.logDirectMessages;
 }
 
 export function cacheMessage(raw: RawMessage, fallbackChannelId?: string) {
@@ -494,6 +494,7 @@ export function onBulkDelete(ids: string[], channelId: string, guildId?: string)
     const now = Date.now();
     const messages = ids.map(id => takeMessage(channelId, id)).filter(isNonNullish);
     const resolvedGuildId = guildId ?? messages[0]?.guildId;
+    if (isGuildBlacklisted(resolvedGuildId)) return;
 
     if (resolvedGuildId) {
         const authors = new Map<string, number>();

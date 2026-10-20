@@ -8,12 +8,12 @@ import "./styles.css";
 
 import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import definePlugin from "@utils/types";
-import type { User } from "@vencord/discord-types";
-import { FluxDispatcher, GuildMemberStore, Menu } from "@webpack/common";
+import type { Guild, User } from "@vencord/discord-types";
+import { FluxDispatcher, GuildMemberStore, Menu, showToast } from "@webpack/common";
 
 import { stopAuditLookups } from "./audit";
 import { openHistoryModal } from "./components/HistoryModal";
-import { settings } from "./settings";
+import { isGuildBlacklisted, setGuildBlacklisted, settings } from "./settings";
 import { loadEntries, logger, saveEntries } from "./store";
 import { cacheMessage, interceptor, onBulkDelete, onMemberStoreChange, onMessageDelete, onVoiceStates, resetTracker, updateCachedMessage } from "./tracker";
 import { FluxVoiceState, RawMessage } from "./types";
@@ -39,6 +39,26 @@ const UserContextMenuPatch: NavContextMenuPatchCallback = (children, { user, gui
     );
 };
 
+const GuildContextMenuPatch: NavContextMenuPatchCallback = (children, { guild }: { guild?: Guild; }) => {
+    if (!guild) return;
+    const blacklisted = isGuildBlacklisted(guild.id);
+
+    children.push(
+        <Menu.MenuItem
+            id="vc-mod-history-blacklist"
+            label={blacklisted ? "Resume logging in Mod History" : "Stop logging in Mod History"}
+            icon={HistoryIcon}
+            action={() => {
+                setGuildBlacklisted(guild.id, !blacklisted);
+                showToast({
+                    text: blacklisted ? `Mod History will log ${guild.name} again.` : `Mod History won't log ${guild.name} anymore.`,
+                    variant: "success"
+                });
+            }}
+        />
+    );
+};
+
 export default definePlugin({
     name: "ShowUserModHistory",
     description: "Logs bans, timeouts, kicks, voice mutes and deleted messages from the events Discord sends to every member, and shows a user's history from their right click menu.",
@@ -48,7 +68,8 @@ export default definePlugin({
     settings,
 
     contextMenus: {
-        "user-context": UserContextMenuPatch
+        "user-context": UserContextMenuPatch,
+        "guild-context": GuildContextMenuPatch
     },
 
     toolboxActions: {

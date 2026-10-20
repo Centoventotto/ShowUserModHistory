@@ -60,6 +60,12 @@ export const settings = definePluginSettings({
         description: "Don't log anything about bots.",
         default: true
     },
+    blacklistedGuilds: {
+        type: OptionType.STRING,
+        description: "IDs of servers to never log, separated by commas. You can also right click a server and pick Stop logging in Mod History.",
+        default: "",
+        isValid: (value: string) => parseGuildIds(value).every(id => /^\d{15,25}$/.test(id)) || "Use server IDs separated by commas."
+    },
     useAuditLog: {
         type: OptionType.BOOLEAN,
         description: "On servers where you can view the audit log, read it to find out who did it and why.",
@@ -95,3 +101,27 @@ export const settings = definePluginSettings({
         component: ManageHistory
     }
 });
+
+let parsedRaw: string | undefined;
+let parsedIds = new Set<string>();
+
+export function parseGuildIds(value: string) {
+    return value.split(/[\s,]+/).filter(Boolean);
+}
+
+export function isGuildBlacklisted(guildId?: string) {
+    if (!guildId) return false;
+    const raw = settings.store.blacklistedGuilds;
+    if (raw !== parsedRaw) {
+        parsedRaw = raw;
+        parsedIds = new Set(parseGuildIds(raw));
+    }
+    return parsedIds.has(guildId);
+}
+
+export function setGuildBlacklisted(guildId: string, blacklisted: boolean) {
+    const ids = new Set(parseGuildIds(settings.store.blacklistedGuilds));
+    if (blacklisted) ids.add(guildId);
+    else ids.delete(guildId);
+    settings.store.blacklistedGuilds = [...ids].join(", ");
+}

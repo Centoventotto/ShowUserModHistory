@@ -42,6 +42,7 @@ Discord never tells regular members who deleted a message, so the plugin works i
 - 🔄 **Re-check** asks Discord for fresh member data of that user.
 - Export to JSON, copy a single event, remove events, clear a user or everything.
 - A global log of every user from the Equicord toolbox (**Open Mod History Log**) or from the plugin settings.
+- Right click a server and pick **Stop logging in Mod History** to blacklist it (and **Resume logging in Mod History** to undo).
 
 ### Settings
 
@@ -52,6 +53,7 @@ Every feature can be turned on or off on its own:
 - Log voice server mutes and deafens
 - Log deleted messages / log bulk deletions / log deletions in DMs
 - Ignore your own messages / ignore bots
+- Server blacklist: servers that are never logged, editable as a list of IDs or from the server right click menu, with the blacklisted servers listed by name in the settings
 - Use the audit log when you have access to it
 - Notifications when a ban or timeout happens
 - Show or hide the **Show Mod History** button
