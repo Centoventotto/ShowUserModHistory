@@ -1,0 +1,399 @@
+.vc-modhistory-root {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 8px;
+}
+
+.vc-modhistory-muted {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.vc-modhistory-link {
+    display: inline;
+    color: var(--text-link);
+    cursor: pointer;
+}
+
+.vc-modhistory-link:hover {
+    text-decoration: underline;
+}
+
+.vc-modhistory-user-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--background-secondary);
+    border: 1px solid var(--border-subtle);
+}
+
+.vc-modhistory-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vc-modhistory-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.vc-modhistory-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+}
+
+.vc-modhistory-user-name {
+    color: var(--header-primary);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.vc-modhistory-user-sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.vc-modhistory-user-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vc-modhistory-section-title {
+    color: var(--header-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.vc-modhistory-status {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vc-modhistory-status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: var(--text-default);
+    font-size: 14px;
+    background: var(--background-primary);
+    border-left: 4px solid var(--vc-modhistory-tone, var(--text-muted));
+}
+
+.vc-modhistory-status-icon {
+    font-size: 16px;
+}
+
+.vc-modhistory-tone-danger {
+    --vc-modhistory-tone: var(--status-danger);
+}
+
+.vc-modhistory-tone-warning {
+    --vc-modhistory-tone: var(--status-warning);
+}
+
+.vc-modhistory-tone-positive {
+    --vc-modhistory-tone: var(--status-positive);
+}
+
+.vc-modhistory-tone-info {
+    --vc-modhistory-tone: var(--brand-500);
+}
+
+.vc-modhistory-tone-muted {
+    --vc-modhistory-tone: var(--text-muted);
+}
+
+.vc-modhistory-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.vc-modhistory-chip-count {
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgb(0 0 0 / 20%);
+}
+
+.vc-modhistory-filter-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.vc-modhistory-guild-select {
+    width: 240px;
+    flex-shrink: 0;
+}
+
+.vc-modhistory-search {
+    flex: 1;
+}
+
+.vc-modhistory-timeline {
+    max-height: 55vh;
+    padding-right: 8px;
+}
+
+.vc-modhistory-day {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.vc-modhistory-day::before,
+.vc-modhistory-day::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+}
+
+.vc-modhistory-entry {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--background-secondary);
+    border-left: 4px solid var(--vc-modhistory-tone, var(--text-muted));
+}
+
+.vc-modhistory-entry:hover {
+    background: var(--background-modifier-hover);
+}
+
+.vc-modhistory-entry-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    font-size: 18px;
+    background: var(--background-primary);
+}
+
+.vc-modhistory-entry-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+}
+
+.vc-modhistory-entry-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vc-modhistory-entry-title {
+    color: var(--header-primary);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.vc-modhistory-entry-time {
+    margin-left: auto;
+    color: var(--text-muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.vc-modhistory-badge {
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: help;
+}
+
+.vc-modhistory-badge-confirmed {
+    color: var(--status-positive);
+    background: color-mix(in srgb, var(--status-positive) 15%, transparent);
+}
+
+.vc-modhistory-badge-probable {
+    color: var(--status-warning);
+    background: color-mix(in srgb, var(--status-warning) 15%, transparent);
+}
+
+.vc-modhistory-badge-possible {
+    color: var(--text-muted);
+    background: color-mix(in srgb, var(--text-muted) 15%, transparent);
+}
+
+.vc-modhistory-entry-user {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.vc-modhistory-entry-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.vc-modhistory-entry-user-name {
+    color: var(--text-default);
+    font-weight: 600;
+}
+
+.vc-modhistory-entry-user:hover .vc-modhistory-entry-user-name {
+    text-decoration: underline;
+}
+
+.vc-modhistory-entry-place {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-default);
+    font-size: 13px;
+}
+
+.vc-modhistory-guild-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+}
+
+.vc-modhistory-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 3px 16px;
+    font-size: 13px;
+}
+
+.vc-modhistory-label {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.vc-modhistory-value {
+    color: var(--text-default);
+    overflow-wrap: anywhere;
+}
+
+.vc-modhistory-countdown {
+    color: var(--status-warning);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.vc-modhistory-message {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: var(--background-primary);
+    border-left: 3px solid var(--border-strong);
+}
+
+.vc-modhistory-message-content {
+    color: var(--text-default);
+    font-size: 14px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.vc-modhistory-attachment {
+    width: fit-content;
+    color: var(--text-link);
+    font-size: 13px;
+}
+
+.vc-modhistory-note {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+    background: var(--background-primary);
+}
+
+.vc-modhistory-entry-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.vc-modhistory-entry-actions {
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.vc-modhistory-entry:hover .vc-modhistory-entry-actions,
+.vc-modhistory-entry:focus-within .vc-modhistory-entry-actions {
+    opacity: 1;
+}
+
+.vc-modhistory-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 40px 0;
+    color: var(--text-default);
+    text-align: center;
+}
+
+.vc-modhistory-empty-icon {
+    font-size: 40px;
+}
+
+.vc-modhistory-more {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+}
+
+.vc-modhistory-manage {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.vc-modhistory-manage-count {
+    color: var(--text-default);
+    font-weight: 600;
+}
+
+.vc-modhistory-manage-buttons {
+    display: flex;
+    gap: 8px;
+}

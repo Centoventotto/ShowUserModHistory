@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, for example v1.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package the plugin
+        run: |
+          mkdir -p build/ShowUserModHistory
+          rsync -a --exclude ".git" --exclude ".github" --exclude "build" ./ build/ShowUserModHistory/
+          cd build
+          zip -r ShowUserModHistory.zip ShowUserModHistory
+          unzip -l ShowUserModHistory.zip
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: ShowUserModHistory ${{ env.VERSION }}
+          target_commitish: ${{ github.sha }}
+          files: build/ShowUserModHistory.zip
+          body: |
+            Equicord user plugin that logs bans, timeouts, kicks, voice mutes and deleted messages, and shows a user's history from their right click menu with **Show Mod History**.
+
+            ## Install
+            1. Set up the Equicord devbuild (`git clone https://github.com/Equicord/Equicord`, then `pnpm install --frozen-lockfile`).
+            2. Download **ShowUserModHistory.zip** below and extract it into `Equicord/src/userplugins/`, so you get `src/userplugins/ShowUserModHistory/index.tsx`.
+            3. Run `pnpm build` and `pnpm inject` from the Equicord folder, restart Discord and enable **ShowUserModHistory** in the plugin list.
+
+            See the [README](https://github.com/${{ github.repository }}#readme) for every feature and its limitations.
